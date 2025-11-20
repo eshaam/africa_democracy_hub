@@ -1,0 +1,22 @@
+<div class="max-w-2xl mx-auto my-10 p-6 bg-white shadow-lg rounded-lg border border-gray-200">
+  <div class="border-b pb-4 mb-4">
+    <h1 class="text-3xl font-bold text-gray-800"><%= @petition.topic %></h1>
+    <p class="text-sm text-gray-500 mt-1">
+      Created by <%= @petition.user&.full_name || "Anonymous" %> • <%= time_ago_in_words(@petition.created_at) %> ago
+    </p>
+  </div>
+
+  <div class="prose max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
+    <%= @petition.final_content || "Drafting in progress..." %>
+  </div>
+
+  <div class="mt-8 pt-4 border-t flex justify-between items-center">
+    <span class="px-3 py-1 rounded-full text-sm font-medium 
+      <%= @petition.status == 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+      Status: <%= @petition.status.capitalize %>
+    </span>
+    <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+      🖨️ Print / Save as PDF
+    </button>
+  </div>
+</div>
