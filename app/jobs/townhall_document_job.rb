@@ -21,7 +21,7 @@ class TownhallDocumentJob < ApplicationJob
       # 2. Attach to Active Storage
       filename = File.basename(file_path)
       
-      # FIX: Typo corrected (was 'downloaded_url', changed to 'download_url')
+      # Corrected variable name
       downloaded_file = URI.open(download_url)
       
       doc.file.attach(io: downloaded_file, filename: filename)
@@ -62,9 +62,14 @@ class TownhallDocumentJob < ApplicationJob
     Telegram::Bot::Client.run(token) do |bot|
       # Split if too long
       text.chars.each_slice(4000) do |chunk|
-        bot.api.send_message(chat_id: chat_id, text: chunk.join, parse_mode: 'Markdown')
+        # FIX: Removed parse_mode: 'Markdown'
+        # This prevents crashes when the AI outputs underscores (_) or asterisks (*)
+        # that don't match Telegram's strict formatting rules.
+        bot.api.send_message(chat_id: chat_id, text: chunk.join)
       end
-      bot.api.send_message(chat_id: chat_id, text: "✅ **Analysis Complete.**")
+      
+      # Send final confirmation
+      bot.api.send_message(chat_id: chat_id, text: "✅ Analysis Complete.")
     end
   end
 
